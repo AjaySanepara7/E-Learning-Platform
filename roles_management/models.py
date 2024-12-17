@@ -30,6 +30,15 @@ class Category(TimeStampedModel):
     category_name = models.CharField(max_length=300)
 
 
+class Course(TimeStampedModel):
+    course_id = models.CharField(max_length=300, primary_key=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    course_name = models.CharField(max_length=300)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    prize = models.PositiveIntegerField()
+
+
 
 
 
