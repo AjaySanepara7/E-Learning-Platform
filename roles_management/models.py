@@ -39,6 +39,10 @@ class Course(TimeStampedModel):
     prize = models.PositiveIntegerField()
 
 
-
+class Enrollment(TimeStampedModel):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    enrollment_id = models.CharField(max_length=300, primary_key=True)
+    enrollment_date = models.DateField()
 
 
