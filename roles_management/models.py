@@ -25,5 +25,11 @@ class Profile(TimeStampedModel):
     resume = models.FileField(upload_to='resume/', null=True, blank=True)
 
 
+class Category(TimeStampedModel):
+    category_id = models.CharField(max_length=300, primary_key=True)
+    category_name = models.CharField(max_length=300)
+
+
+
 
 
