@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from phone_field import PhoneField
+from course_app.models import Course
 from django_countries.fields import CountryField
 from django_extensions.db.models import TimeStampedModel
 
@@ -12,37 +12,25 @@ class Profile(TimeStampedModel):
         ("O", "Others")
     ]
 
-    countries = [
-        ("I", "India")
-    ]
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=100, choices=person_gender)
+    gender = models.CharField(max_length=20, choices=person_gender)
     date_of_birth = models.DateField()
-    mobile = PhoneField(blank=True, help_text='Contact phone number', unique=True)
+    mobile = models.CharField(max_length=25, unique=True)
     country = CountryField()
     profie_picture = models.ImageField(upload_to='images/', null=True, blank=True)
     resume = models.FileField(upload_to='resume/', null=True, blank=True)
 
-
-class Category(TimeStampedModel):
-    category_id = models.CharField(max_length=300, primary_key=True)
-    category_name = models.CharField(max_length=300)
-
-
-class Course(TimeStampedModel):
-    course_id = models.CharField(max_length=300, primary_key=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    course_name = models.CharField(max_length=300)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    prize = models.PositiveIntegerField()
+    def __str__(self):
+        return self.user.username
 
 
 class Enrollment(TimeStampedModel):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    enrollment_id = models.CharField(max_length=300, primary_key=True)
-    enrollment_date = models.DateField()
+    is_active = models.BooleanField()
 
+    def __str__(self):
+        return f"student{self.profile} is enrolled in {self.course} course"
 
+    class Meta:
+        unique_together = ('user', 'course')
