@@ -31,7 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'E_Learning_Platform.apps.RolesManagementConfig',
+    'roles_management.apps.RolesManagementConfig',
+    'course_app.apps.CourseAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_countries',
     'phone_field',
-    'django_admin_timestamps',
     'django_extensions'
 ]
 
