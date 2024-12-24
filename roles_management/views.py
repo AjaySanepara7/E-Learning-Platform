@@ -36,3 +36,22 @@ class SignupPage(View):
         return render(request, self.template_name, {"user_form": self.user_form, "profil_form": self.profile_form })
     
 
+class LoginPage(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/login_page.html")
+    
+    def post(self, request, *args, **kwargs):
+        user = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
+        if user is not None:
+            login(request, user)
+            return redirect(reverse("roles_management:dashborad"))
+        else:
+            context={
+                "login_failed": "Login failed. Invalid Credentials"
+            }
+            return render(request, "roles_management/login_page.html", context)
+        
+
+class Dashboard(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/dashboard.html")
