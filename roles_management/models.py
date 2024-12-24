@@ -19,6 +19,7 @@ class Profile(TimeStampedModel):
     country = CountryField()
     profie_picture = models.ImageField(upload_to='images/', null=True, blank=True)
     resume = models.FileField(upload_to='resume/', null=True, blank=True)
+    is_teacher = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

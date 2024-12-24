@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Signup_page {% endblock %}
+
+{% block body %}
+<div class="p-3 col-sm-6 mx-auto container my-5">
+    <div class="top-line"></div>
+    <div class="formbox p-5">
+        
+        <h1 class="text-center pt-5 mb-5">Sign Up</h1>
+
+        {% if userexists %}<h3 class="text-center pt-5"><strong>{{ userexists }}</strong></h3>{% endif %}
+
+        <form class=" py-5 cmxform" id="signupForm" method="post" autocomplete="off" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ user_form.non_field_errors }}
+            {{ profile_form.non_field_errors }}
+            <div>
+                <div>
+                    {{ user_form.username.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.username }}
+                </div>
+                <label for="{{ user_form.username.id_for_label }}" class="error">Please enter your Username</label>
+            </div>
+
+
+            <div>
+                <div>
+                    {{ user_form.first_name.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.first_name }}
+                </div>
+                <label for="{{ user_form.first_name.id_for_label }}" class="error">Please enter your First Name</label>
+            </div>
+
+
+            <div>
+                <div>
+                    {{ user_form.last_name.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.last_name }}
+                </div>
+                <label for="{{ user_form.last_name.id_for_label }}" class="error">Please enter your Last Name</label>
+            </div>
+
+
+            <div>
+                <div>
+                    {{ user_form.email.errors }}
+                </div>
+                <div class="error mt-3">
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/image.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.email }}
+                </div>
+                <label for="{{ user_form.email.id_for_label }}" class="error">Please enter your Email</label>
+            </div>
+
+
+            <div>
+                <div>
+                    {{ user_form.password.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/lock.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.password }}
+                </div>
+                <label for="{{ user_form.password.id_for_label }}" class="error">Please enter your Password</label>
+            </div>
+
+            
+            <div>
+                <div>
+                    {{ user_form.confirm_password.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <span class="input-group-text border border-2 border-dark">
+                        <img src="{% static 'Assets/lock.png' %}" class="w-100 h-100" alt="mail-logo">
+                    </span>
+                    {{ user_form.confirm_password }}
+                </div>
+                <label for="{{ user_form.confirm_password.id_for_label }}" class="error">Please enter the same password as above</label>
+            </div>
+
+
+            <div>
+                <div>
+                    {{ profile_form.date_of_birth.errors }}
+                </div>
+                <label for="{{ profile_form.date_of_birth.id_for_label }}" class="h6">Date of Birth</label>
+                <div class="input-group mt-2 mb-5">
+                    {{ profile_form.date_of_birth }}
+                </div>
+                <label for="{{ profile_form.date_of_birth.id_for_label }}" class="error">Please enter Date of Birth</label>
+            </div>
+
+
+            <fieldset>
+                <div>
+                    {{ profile_form.gender.errors }}
+                </div>
+                <legend class="h6 pt-2">Gender</legend>
+                <div class="form-check d-flex  py-2 mb-5">
+                    {{ profile_form.gender}}
+                </div>
+                <label for="gender" class="error">Please select your gender</label>
+            </fieldset>
+
+
+            <fieldset>
+                <div>
+                    {{ profile_form.profie_picture.errors }}
+                </div>
+                <legend class="mb-3 h6">Upload profile picture</legend>
+                <div>
+                    {{ profile_form.profie_picture}}
+                </div>
+                <label for="hobby" class="error">Please upload an image</label>
+            </fieldset>
+
+
+            <div class="d-flex justify-content-center mt-5">
+                <button type="submit" class="submit btn btn-success m-2" id="submit" name="submit">Submit</button>
+                
+                <a href="{% url 'roles_management:login_page' %}">
+                    <button type="button" class="submit btn btn-success m-2" id="login" name="login">Login</button>
+                </a>
+                    <a href="{% url 'roles_management:home' %}" class="text-white">
+                <button type="button" class="submit btn btn-success m-2" id="Home">Home</button>
+                    </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
