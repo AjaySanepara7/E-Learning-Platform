@@ -67,6 +67,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
+LOGIN_URL = 'http://127.0.0.1:8000/login_page'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

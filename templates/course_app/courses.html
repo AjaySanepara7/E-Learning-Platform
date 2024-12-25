@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Courses {% endblock %}
+
+{% block body %}
+
+    {% if logout %}<h3 class="text-center pt-5"><strong>{{ logout }}</strong></h3>{% endif %}
+    {% if course_created %}<h3 class="text-center pt-5"><strong>{{ course_created }}</strong></h3>{% endif %}
+
+    <div class="d-flex justify-content-center">
+        {% for course in courses %}
+                <button type="button" class="btn btn-success m-2 p-5">
+                    {{ course }}
+                </button>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
