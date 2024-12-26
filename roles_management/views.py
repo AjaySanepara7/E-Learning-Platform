@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from django.conf import settings
+from roles_management.models import Enrollment
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -44,7 +45,7 @@ class LoginPage(View):
         user = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
         if user is not None:
             login(request, user)
-            return redirect(reverse("roles_management:dashborad"))
+            return redirect(reverse("roles_management:dashboard"))
         else:
             context={
                 "login_failed": "Login failed. Invalid Credentials"
@@ -55,3 +56,38 @@ class LoginPage(View):
 class Dashboard(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/dashboard.html")
+    
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        context = {
+                "logout": "Logout Successful"
+            }
+        return render(request, "roles_management/login_page.html", context)
+    
+
+class Enroll(View):
+    enroll_form = EnrollmentForm()
+
+    def get(self, request, *args, **kwargs):
+        enroll_form = EnrollmentForm()
+        return render(request, "roles_management/enroll.html", {"enroll_form": enroll_form})
+    
+    def post(self, request, *args, **kwargs):
+        enroll_form = EnrollmentForm(request.POST)
+        user = request.user
+        
+        if enroll_form.is_valid():
+            enrollment = enroll_form.save(commit=False)
+            enrollment_object = Enrollment.objects.filter(user=user, course=enrollment.course)
+            if enrollment_object:
+                context = {
+                    "already_enrolled": "User is already enrolled in this course select another course",
+                    "enroll_form": EnrollmentForm()
+                }
+                return render(request, "roles_management/enroll.html", context)
+            else:
+                enrollment.user = user
+                enrollment.is_active = True
+                enrollment.save()
+                return render(request, "roles_management/dashboard.html", {"enrolled_successfully": "Enrollment Successfull"})
+        return render(request, "roles_management/enroll.html", {"enroll_form": EnrollmentForm()})
