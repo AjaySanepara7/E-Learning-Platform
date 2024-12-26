@@ -26,7 +26,8 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.username }}
+                    <input type="text" name="username" maxlength="150" class="form-control border border-2 border-dark" placeholder="Username" 
+                     required="" aria-describedby="id_username_helptext" id="id_username">
                 </div>
                 <label for="{{ user_form.username.id_for_label }}" class="error">Please enter your Username</label>
             </div>
@@ -40,7 +41,8 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.first_name }}
+                    <input type="text" name="first_name" maxlength="150" class="form-control border border-2 border-dark" 
+                     placeholder="First Name" id="id_first_name">  
                 </div>
                 <label for="{{ user_form.first_name.id_for_label }}" class="error">Please enter your First Name</label>
             </div>
@@ -54,7 +56,8 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/person.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.last_name }}
+                    <input type="text" name="last_name" maxlength="150" class="form-control border border-2 border-dark" 
+                    placeholder="Last Name" id="id_last_name">
                 </div>
                 <label for="{{ user_form.last_name.id_for_label }}" class="error">Please enter your Last Name</label>
             </div>
@@ -70,7 +73,7 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/image.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.email }}
+                    <input type="email" name="email" maxlength="254" class="form-control border border-2 border-dark" placeholder="Email" id="id_email">
                 </div>
                 <label for="{{ user_form.email.id_for_label }}" class="error">Please enter your Email</label>
             </div>
@@ -84,7 +87,7 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/lock.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.password }}
+                    <input type="email" name="email" maxlength="254" class="form-control border border-2 border-dark" placeholder="Email" id="id_email">
                 </div>
                 <label for="{{ user_form.password.id_for_label }}" class="error">Please enter your Password</label>
             </div>
@@ -98,10 +101,36 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/lock.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    {{ user_form.confirm_password }}
+                    <input type="password" name="confirm_password" class="form-control border border-2 border-dark" placeholder="Confirm Password" 
+                     required="" id="id_confirm_password">
                 </div>
                 <label for="{{ user_form.confirm_password.id_for_label }}" class="error">Please enter the same password as above</label>
             </div>
+            
+
+            <div>
+                <div>
+                    {{ profile_form.mobile.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    <input type="text" name="mobile" class="form-control border border-2 border-dark" placeholder="Mobile Number" required="" id="id_mobile">
+                </div>
+                <label for="{{ profile_form.mobile.id_for_label }}" class="error">Please enter mobile number</label>
+            </div>
+
+
+            {% load countries %}
+            {% get_countries as countries %}
+            <div class="fieldWrapper input-group mb-5">
+                <select name="country" class="form-control border border-2 border-dark" id="id_country">
+                    <option value="">Select a Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
 
 
             <div>
@@ -110,7 +139,7 @@
                 </div>
                 <label for="{{ profile_form.date_of_birth.id_for_label }}" class="h6">Date of Birth</label>
                 <div class="input-group mt-2 mb-5">
-                    {{ profile_form.date_of_birth }}
+                    <input type="date" name="date_of_birth" class="form-control border border-2 border-dark" required="" id="id_date_of_birth">
                 </div>
                 <label for="{{ profile_form.date_of_birth.id_for_label }}" class="error">Please enter Date of Birth</label>
             </div>
@@ -118,11 +147,24 @@
 
             <fieldset>
                 <div>
-                    {{ profile_form.gender.errors }}
+                    
                 </div>
                 <legend class="h6 pt-2">Gender</legend>
                 <div class="form-check d-flex  py-2 mb-5">
-                    {{ profile_form.gender}}
+                    <div id="id_gender">
+                        <div>
+                            <label for="id_gender_0"><input type="radio" name="gender" value="M" required="" id="id_gender_0">Male</label>
+        
+                        </div>
+                        <div>
+                            <label for="id_gender_1"><input type="radio" name="gender" value="F" required="" id="id_gender_1">Female</label>
+        
+                        </div>
+                        <div>
+                            <label for="id_gender_2"><input type="radio" name="gender" value="O" required="" id="id_gender_2">Others</label>
+        
+                        </div>
+                    </div>
                 </div>
                 <label for="gender" class="error">Please select your gender</label>
             </fieldset>
@@ -134,14 +176,36 @@
                 </div>
                 <legend class="mb-3 h6">Upload profile picture</legend>
                 <div>
-                    {{ profile_form.profie_picture}}
+                    <input type="file" name="profie_picture" accept="image/*" id="id_profie_picture">
                 </div>
-                <label for="hobby" class="error">Please upload an image</label>
+                <label for="{{ profile_form.profie_picture.id_for_label }}" class="error">Please upload an image</label>
             </fieldset>
+
+            <fieldset>
+                <div>
+                    {{ profile_form.resume.errors }}
+                </div>
+                <legend class="mb-3 h6">Upload profile picture</legend>
+                <div>
+                    <input type="file" name="resume" id="id_resume">
+                </div>
+                <label for="{{ profile_form.resume.id_for_label }}" class="error">Please upload an image</label>
+            </fieldset>
+
+            <div>
+                <div>
+                    {{ profile_form.is_teacher.errors }}
+                </div>
+                <label for="{{ profile_form.is_teacher.id_for_label }}" class="h6">Are you a Teacher</label>
+                <div class="input-group mt-2 mb-5">
+                    <input type="checkbox" name="is_teacher" id="id_is_teacher">
+                </div>
+                <label for="{{ profile_form.is_teacher.id_for_label }}" class="error">Please enter Date of Birth</label>
+            </div>
 
 
             <div class="d-flex justify-content-center mt-5">
-                <button type="submit" class="submit btn btn-success m-2" id="submit" name="submit">Submit</button>
+                <button type="submit" class="submit btn btn-success m-2" id="signup" name="submit">Signup</button>
                 
                 <a href="{% url 'roles_management:login_page' %}">
                     <button type="button" class="submit btn btn-success m-2" id="login" name="login">Login</button>
