@@ -35,7 +35,8 @@
                     {{ course_form.course_name.errors }}
                 </div>
                 <div class="mb-5">
-                    {{ course_form.course_name }}
+                    <input type="text" name="course_name" maxlength="300" class="form-control border border-2 border-dark" placeholder="Course Name" 
+                     required="" id="id_course_name">
                 </div>
                 <label for="{{ course_form.course_name.id_for_label }}" class="error">Please enter course name</label>
             </div>
@@ -45,7 +46,8 @@
                     {{ course_form.course_description.errors }}
                 </div>
                 <div class="mb-5">
-                    {{ course_form.course_description }}
+                    <textarea name="course_description" cols="40" rows="10" class="form-control border border-2 border-dark" placeholder="Course Description" 
+                     id="id_course_description"></textarea>
                 </div>
                 <label for="{{ course_form.course_description.id_for_label }}" class="error">Please enter course description</label>
             </div>
@@ -56,7 +58,7 @@
                 </div>
                 <label for="{{ course_form.start_date.id_for_label }}" class="h6">Start Date</label>
                 <div class="mb-5">
-                    {{ course_form.start_date }}
+                    <input type="date" name="start_date" class="form-control border border-2 border-dark" required="" id="id_start_date">
                 </div>
                 <label for="{{ course_form.start_date.id_for_label }}" class="error">Please enter start date of the course</label>
             </div>
@@ -67,7 +69,7 @@
                 </div>
                 <label for="{{ course_form.end_date.id_for_label }}" class="h6">End Date</label>
                 <div class="mb-5">
-                    {{ course_form.end_date }}
+                    <input type="date" name="end_date" class="form-control border border-2 border-dark" required="" id="id_end_date">
                 </div>
                 <label for="{{ course_form.end_date.id_for_label }}" class="error">Please enter end date of the course</label>
             </div>
@@ -77,7 +79,8 @@
                     {{ course_form.course_image.errors }}
                 </div>
                 <div class="mb-5">
-                    {{ course_form.course_image }}
+                    <input type="file" name="course_image" accept="image/*" class="form-control border border-2 border-dark" 
+                    placeholder="Course Image" id="id_course_image">
                 </div>
                 <label for="{{ course_form.course_image.id_for_label }}" class="error">Please provide a course image</label>
             </div>
