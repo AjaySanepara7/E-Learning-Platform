@@ -4,7 +4,7 @@ from django_extensions.db.models import TimeStampedModel
 
 
 class Category(TimeStampedModel):
-    category_name = models.CharField(max_length=300, unique=True)
+    category_name = models.CharField(max_length=250, unique=True)
 
 
     def __str__(self):

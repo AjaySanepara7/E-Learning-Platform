@@ -5,11 +5,20 @@ from django.conf import settings
 from roles_management.models import Enrollment, Course
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from roles_management.tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.contrib import messages
 
+
+User = get_user_model()
 
 class Home(View):
     def get(self, request, *args, **kwargs):
@@ -125,3 +134,57 @@ class ResetPassword(View):
             "same_password": "The new password cannot be the same as the current password"
             }
             return render(request, "roles_management/reset_password.html", context)
+        
+
+class VerifyEmail(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/verify_email.html", {"user": request.user})
+    
+    def post(self, request, *args, **kwargs):
+        if not request.user.email_is_verified:
+            current_site = get_current_site(request)
+            user = request.user
+            email = request.user.email
+            subject = "Verify Email"
+            message = render_to_string('user/verify_email_message.html', {
+                'request': request,
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            email = EmailMessage(
+                subject, message, to=[email]
+            )
+            email.content_subtype = 'html'
+            email.send()
+            return redirect('verify-email-done')
+        else:
+            return redirect('signup')
+        
+
+class VerifyEmailDone(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'users/verify_email_done.html')
+    
+
+class VerifyEmailConfirm(View):
+    def get(self, request, uidb64, token, *args, **kwargs):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.email_is_verified = True
+            user.save()
+            messages.success(request, 'Your email has been verified.')
+            return redirect('verify-email-complete')
+        else:
+            messages.warning(request, 'The link is invalid.')
+        return render(request, 'user/verify_email_confirm.html')
+    
+
+class VerifyEmailComplete(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'user/verify_email_complete.html')

@@ -36,7 +36,10 @@
 
         <div class="d-flex justify-content-center mt-5">
             <button type="submit" class="submit btn btn-danger m-2" id="logout" name="logout">Logout</button>
-                <button type="button" class="submit btn btn-danger m-2" id="submit">Change Password</button>
+            <button type="button" class="submit btn btn-danger m-2" id="submit">Change Password</button>
+            <a href="{% url 'roles_management:reset_password' %}" class="text-white">
+                <button type="button" class="submit btn btn-danger m-2" id="reset_password" name="reset_password">Reset Password</button>
+            </a>
         </div>
     </form>
 {% endblock %}

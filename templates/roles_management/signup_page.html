@@ -87,7 +87,8 @@
                     <span class="input-group-text border border-2 border-dark">
                         <img src="{% static 'Assets/lock.png' %}" class="w-100 h-100" alt="mail-logo">
                     </span>
-                    <input type="email" name="email" maxlength="254" class="form-control border border-2 border-dark" placeholder="Email" id="id_email">
+                    <input type="password" name="password" id="password" required="" class="form-control border border-2 border-dark" 
+                    placeholder="Password">
                 </div>
                 <label for="{{ user_form.password.id_for_label }}" class="error">Please enter your Password</label>
             </div>
