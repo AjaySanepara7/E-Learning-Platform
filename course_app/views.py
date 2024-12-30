@@ -14,13 +14,17 @@ class CreateCourse(View):
     def get(self, request, *args, **kwargs):
         course_form = CourseForm()
         return render(request, self.template_name, {"course_form": course_form})
-    
+            
     def post(self, request, *args, **kwargs):
             course_form = CourseForm(request.POST, request.FILES)
+            user = request.user
             if course_form.is_valid():
-                course_form.save()
-                context = {
-                    "course_created": "Course created successfully",
-                    "courses": Course.objects.all()
-                }
-                return render(request, "course_app/courses.html", context)
+                if user.has_perm('course_app.add_course'):
+                    course_form.save()
+                    context = {
+                        "course_created": "Course created successfully",
+                        "courses": Course.objects.all()
+                    }
+                    return render(request, "course_app/courses.html", context)
+                else:
+                     return render(request, self.template_name, {"no_permission": "You don't have permission to create a course"})

@@ -12,6 +12,7 @@
         <h1 class="text-center pt-5 mb-5">Create Course</h1>
 
         {% if userexists %}<h3 class="text-center pt-5"><strong>{{ userexists }}</strong></h3>{% endif %}
+        {% if no_permission %}<h3 class="text-center pt-5"><strong>{{ no_permission }}</strong></h3>{% endif %}
         {% if course_creation_failed %}<h3 class="text-center pt-5"><strong>{{ course_creation_failed }}</strong></h3>{% endif %}
 
         <form class=" py-5 cmxform" id="create_course" method="post" autocomplete="off" enctype="multipart/form-data">
