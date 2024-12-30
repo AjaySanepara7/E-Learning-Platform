@@ -1,47 +1,52 @@
 from django import forms
 from django.contrib.auth.models import User
 from roles_management.models import Profile, Enrollment
+from course_app.models import Course
+from django.contrib.auth import authenticate, get_user_model
+
+User = get_user_model()
 
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={"id": "password"}))
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["username"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "Username"})
-        self.fields["first_name"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "First Name"})
-        self.fields["last_name"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "Last Name"})
-        self.fields["email"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "Email"})
-        self.fields["password"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "Password"})
-        self.fields["confirm_password"].widget.attrs.update({"class": "form-control border border-2 border-dark", "placeholder": "Confirm Password"})
-
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password', 'confirm_password']
 
+    def clean(self, *args, **kwargs):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        email_check = User.objects.filter(email=email)
+        if email_check.exists():
+            raise forms.ValidationError('This Email already exists')
+        if len(password) < 5:
+            raise forms.ValidationError('Your password should have more than 5 characters')
+        return super(UserForm, self).clean(*args, **kwargs)
+
 
 class ProfileForm(forms.ModelForm):
-    person_gender = [
-        ("M", "Male"),
-        ("F", "Female"),
-        ("O", "Others")
-    ]
-
-    gender = forms.ChoiceField(
-        widget = forms.RadioSelect,
-        choices = person_gender
-    )
-    date_of_birth = forms.DateField(
-        widget=forms.DateInput(attrs={"class": "form-control border border-2 border-dark", "name": "date_of_birth", "type": "date"}) 
-    )
 
     class Meta:
         model = Profile
-        fields = ['gender', 'date_of_birth', 'profie_picture']
+        fields = ['mobile', 'gender', 'date_of_birth', 'profie_picture', 'country', 'resume', 'is_teacher']
+
 
 
 class EnrollmentForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["course"] = forms.ModelChoiceField(
+            queryset=Course.objects.all(),
+            widget = forms.Select(attrs={
+                "class": "form-control border border-2 border-dark",
+                "placeholder": "Course"}),
+            empty_label = "Select a Course"
+        )
+        
+
     class Meta:
         model = Enrollment
-        fields = ['is_active']
+        fields = ['course', 'is_active']

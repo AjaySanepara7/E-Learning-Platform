@@ -1,8 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from course_app.models import Course
 from django_countries.fields import CountryField
 from django_extensions.db.models import TimeStampedModel
+from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import gettext_lazy as _
+
 
 
 class Profile(TimeStampedModel):
@@ -19,7 +22,7 @@ class Profile(TimeStampedModel):
     country = CountryField()
     profie_picture = models.ImageField(upload_to='images/', null=True, blank=True)
     resume = models.FileField(upload_to='resume/', null=True, blank=True)
-    is_teacher = models.BooleanField(default=False)
+    is_teacher = models.BooleanField()
 
     def __str__(self):
         return self.user.username
@@ -31,7 +34,7 @@ class Enrollment(TimeStampedModel):
     is_active = models.BooleanField()
 
     def __str__(self):
-        return f"student{self.profile} is enrolled in {self.course} course"
+        return f"student{self.user.username} is enrolled in {self.course} course"
 
     class Meta:
         unique_together = ('user', 'course')

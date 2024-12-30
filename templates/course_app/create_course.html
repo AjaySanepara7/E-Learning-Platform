@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Signup_page {% endblock %}
+
+{% block body %}
+<div class="p-3 col-sm-6 mx-auto container my-5">
+    <div class="top-line"></div>
+    <div class="formbox p-5">
+        
+        <h1 class="text-center pt-5 mb-5">Create Course</h1>
+
+        {% if userexists %}<h3 class="text-center pt-5"><strong>{{ userexists }}</strong></h3>{% endif %}
+        {% if no_permission %}<h3 class="text-center pt-5"><strong>{{ no_permission }}</strong></h3>{% endif %}
+        {% if course_creation_failed %}<h3 class="text-center pt-5"><strong>{{ course_creation_failed }}</strong></h3>{% endif %}
+
+        <form class=" py-5 cmxform" id="create_course" method="post" autocomplete="off" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ course_form.non_field_errors }}
+            
+
+            <div>
+                <div>
+                    {{ course_form.category.errors }}
+                </div>
+                <div class="mb-5">
+                    {{ course_form.category }}
+                </div>
+                <label for="{{ course_form.category.id_for_label }}" class="error">Please enter category</label>
+            </div>
+
+            <div>
+                <div>
+                    {{ course_form.course_name.errors }}
+                </div>
+                <div class="mb-5">
+                    <input type="text" name="course_name" maxlength="300" class="form-control border border-2 border-dark" placeholder="Course Name" 
+                     required="" id="id_course_name">
+                </div>
+                <label for="{{ course_form.course_name.id_for_label }}" class="error">Please enter course name</label>
+            </div>
+            
+            <div>
+                <div>
+                    {{ course_form.course_description.errors }}
+                </div>
+                <div class="mb-5">
+                    <textarea name="course_description" cols="40" rows="10" class="form-control border border-2 border-dark" placeholder="Course Description" 
+                     id="id_course_description"></textarea>
+                </div>
+                <label for="{{ course_form.course_description.id_for_label }}" class="error">Please enter course description</label>
+            </div>
+
+            <div>
+                <div>
+                    {{ course_form.start_date.errors }}
+                </div>
+                <label for="{{ course_form.start_date.id_for_label }}" class="h6">Start Date</label>
+                <div class="mb-5">
+                    <input type="date" name="start_date" class="form-control border border-2 border-dark" required="" id="id_start_date">
+                </div>
+                <label for="{{ course_form.start_date.id_for_label }}" class="error">Please enter start date of the course</label>
+            </div>
+
+            <div>
+                <div>
+                    {{ course_form.end_date.errors }}
+                </div>
+                <label for="{{ course_form.end_date.id_for_label }}" class="h6">End Date</label>
+                <div class="mb-5">
+                    <input type="date" name="end_date" class="form-control border border-2 border-dark" required="" id="id_end_date">
+                </div>
+                <label for="{{ course_form.end_date.id_for_label }}" class="error">Please enter end date of the course</label>
+            </div>
+
+            <div>
+                <div>
+                    {{ course_form.course_image.errors }}
+                </div>
+                <div class="mb-5">
+                    <input type="file" name="course_image" accept="image/*" class="form-control border border-2 border-dark" 
+                    placeholder="Course Image" id="id_course_image">
+                </div>
+                <label for="{{ course_form.course_image.id_for_label }}" class="error">Please provide a course image</label>
+            </div>
+
+            <div class="d-flex justify-content-center mt-5">
+                <button type="submit" class="submit btn btn-success m-2" id="create_course" name="submit">Create</button>
+                
+                <a href="{% url 'roles_management:home' %}" class="text-white">
+                    <button type="button" class="submit btn btn-success m-2" id="Home">Home</button>
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

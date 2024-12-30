@@ -4,7 +4,7 @@ from django_extensions.db.models import TimeStampedModel
 
 
 class Category(TimeStampedModel):
-    category_name = models.CharField(max_length=300, unique=True)
+    category_name = models.CharField(max_length=250, unique=True)
 
 
     def __str__(self):
@@ -13,7 +13,7 @@ class Category(TimeStampedModel):
 
 class Course(TimeStampedModel):
     course_id = models.CharField(max_length=100, unique=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     course_name = models.CharField(max_length=300)
     course_description = models.TextField(null=True, blank=True)
     start_date = models.DateField()
@@ -25,7 +25,7 @@ class Course(TimeStampedModel):
         if not self.course_id:
             prefix = self.course_name[:3]
             unique_number = random.randint(100, 999)
-            self.course_id = prefix + unique_number
+            self.course_id = prefix + str(unique_number)
 
             super().save(*args, **kwargs)
 

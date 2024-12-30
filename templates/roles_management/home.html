@@ -12,11 +12,12 @@
                 <button type="button" class="submit btn btn-success" id="Sign up" name="signup">Sign up</button>
             </a>
         </div>
-
+        {% if not request.session.loggedin %}
         <div class="d-flex justify-content-center m-2 p-2">
             <a href="{% url 'roles_management:login_page' %}" class="text-white">
                 <button type="button" class="submit btn btn-success" id="login" name="login">Login</button>
             </a>
         </div>
+        {% endif %}
     </form>
 {% endblock %}
