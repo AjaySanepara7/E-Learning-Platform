@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 from roles_management.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 
 User = get_user_model()
@@ -110,30 +111,27 @@ class Enroll(View):
         return render(request, "roles_management/enroll.html", {"enroll_form": EnrollmentForm()})
     
 
+
+
 class ResetPassword(View):
+    context = {}
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/reset_password.html")
     
     def post(self, request, *args, **kwargs):
-        user = request.user
-        if not user.check_password(request.POST.get("password")):
-            if request.POST.get("password") == request.POST.get("confirm_password"):
-                user.set_password(request.POST.get("password"))
-                user.save()
-                context = {
-                "success_change_password": "Password changed successfully"
-                }
-                return render(request, "roles_management/reset_password.html", context)
-            else:
-                context = {
-                "match_password": "The confirm passwor did not match the password"
-                }
-                return render(request, "roles_management/reset_password.html", context)
-        else:
-            context = {
-            "same_password": "The new password cannot be the same as the current password"
-            }
-            return render(request, "roles_management/reset_password.html", context)
+        recepient_id = request.POST.get("email")
+        html_content = "<p>Click this link to <a href='http://127.0.0.1:8000/reset_password_confirm'> Reset <a> password.</p>"
+        try:
+            msg = EmailMultiAlternatives("reset password", "message", settings.EMAIL_HOST_USER, [recepient_id])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            self.context['result'] = 'Email sent successfully'
+        except Exception as e:
+            self.context['result'] = f'Error sending email: {e}'
+
+        return render(request, "roles_management/reset_password.html", {"link": "Click the link sent to your registered email id to reset password"})
+
+
         
 
 class VerifyEmail(View):
@@ -188,3 +186,58 @@ class VerifyEmailConfirm(View):
 class VerifyEmailComplete(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'user/verify_email_complete.html')
+    
+
+
+
+
+class SendMail(View):
+    context = {}
+    def get(self, request, *args, **kwargs):
+        return render(request, "index.html", self.context)
+    
+    def post(self, request, *args, **kwargs):
+        address = request.POST.get('address')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        html_content = "<p>This is an <strong>important</strong><a href='http://127.0.0.1:8000/login'> login <a> message.</p>"
+
+        if address and subject and message:
+            try:
+                msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, [address])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+                self.context['result'] = 'Email sent successfully'
+            except Exception as e:
+                self.context['result'] = f'Error sending email: {e}'
+        else:
+            self.context['result'] = 'All fields are required'
+
+        return render(request, "index.html", self.context)
+    
+
+class ResetPasswordLink(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/reset_password_confirm.html")
+    
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if not user.check_password(request.POST.get("password")):
+            if request.POST.get("password") == request.POST.get("confirm_password"):
+                user.set_password(request.POST.get("password"))
+                user.save()
+                context = {
+                "success_change_password": "Password changed successfully"
+                }
+                return render(request, "roles_management/reset_password_confirm.html", context)
+            else:
+                context = {
+                "match_password": "The confirm passwor did not match the password"
+                }
+                return render(request, "roles_management/reset_password_confirm.html", context)
+        else:
+            context = {
+            "same_password": "The new password cannot be the same as the current password"
+            }
+            return render(request, "roles_management/reset_password_confirm.html", context)

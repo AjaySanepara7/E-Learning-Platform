@@ -15,4 +15,6 @@ urlpatterns = [
     path('verify-email/done/', views.VerifyEmailDone.as_view(), name='verify-email-done'),
     path('verify-email-confirm/<uidb64>/<token>/', views.VerifyEmailConfirm.as_view(), name='verify-email-confirm'),
     path('verify-email/complete/', views.VerifyEmailComplete.as_view(), name='verify-email-complete'),  
+    path('sendmail/', views.SendMail.as_view(), name='sendmail'),  
+    path('reset_password_confirm/', login_required(views.ResetPasswordLink.as_view()), name='reset_password_confirm'),  
 ]
