@@ -241,4 +241,3 @@ class ResetPasswordLink(View):
             context = {
             "same_password": "The new password cannot be the same as the current password"
             }
-            return render(request, "roles_management/reset_password_confirm.html", context)
