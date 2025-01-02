@@ -20,6 +20,8 @@ from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
 
 
+User = get_user_model()
+
 class Home(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/home.html")
@@ -239,3 +241,5 @@ class ResetPasswordLink(View):
             context = {
             "same_password": "The new password cannot be the same as the current password"
             }
+            return render(request, "roles_management/reset_password_confirm.html", context)
+
