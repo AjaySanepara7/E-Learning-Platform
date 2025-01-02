@@ -55,8 +55,6 @@ class LoginPage(View):
             return render(request, "roles_management/login_page.html", context)
         
 
-class Dashboard(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/dashboard.html")
+
     
     
