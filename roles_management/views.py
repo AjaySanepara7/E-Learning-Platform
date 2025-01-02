@@ -20,7 +20,6 @@ from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
 
 
-User = get_user_model()
 
 class Home(View):
     def get(self, request, *args, **kwargs):
