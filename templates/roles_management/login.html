@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+    <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+        <div class="container">
+        <nav class="breadcrumbs">
+            <ol>
+            <li><a href="{% url 'roles_management:home' %}">Home</a></li>
+            <li class="current">Starter Page</li>
+            </ol>
+        </nav>
+        <h1>Starter Page</h1>
+        </div>
+    </div><!-- End Page Title -->
+
+    {% if login_failed %}<h3 class="text-center"><strong>{{ login_failed }}</strong></h3>{% endif %}
+    {% if logout %}<h3 class="text-center"><strong>{{ logout }}</strong></h3>{% endif %}
+    {% if registration_success %}<h3 class="text-center pt-5"><strong>{{ registration_success }}</strong></h3>{% endif %}
+
+    <!-- Starter Section Section -->
+    <section id="starter-section" class="starter-section section d-flex align-items-center">
+        <div class="p-3 col-sm-6 mx-auto container my-5 border border-5  h-100" id="login_box">
+            <div class="top-line"></div>
+                <div class="formbox p-5">
+                    <form method="post" class=" py-5 col-9 m-auto" action="{% url 'roles_management:login' %}">
+                        {% csrf_token %}
+                        <h1 class="text-center">Login</h1>
+                        <div>
+                            <div class="input-group mt-5 mb-2 col-6">
+                                <input type="text" id="username" class="form-control border border-2 border-dark" placeholder="Username" name="username">
+                            </div>
+                            <label for="username" class="error">Enter Username</label>
+                        </div>
+                
+                
+                        <div>
+                            <div class="input-group mt-5 mb-2">
+                                <input type="password" id="password" class="form-control border border-2 border-dark" placeholder="Password" name="password">
+                            </div>
+                            <label for="password" class="error">Enter Password</label>
+                        </div>
+                        <div class="hover-style">
+                            <a href="{% url 'roles_management:signup' %}" class="text-white">
+                                Create new account ?
+                            </a>
+                        </div>
+                
+                        <div class="d-flex justify-content-center mt-4">
+                            <button type="submit" class="submit btn btn-danger m-2 login_btn" id="login_submit" name="submit">Login</button>
+                            <a href="{% url 'roles_management:home' %}">
+                                <button type="button" class="submit btn btn-danger m-2 login_btn" id="login_home">Home</button>
+                            </a>
+                        </div>
+                
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section><!-- /Starter Section Section -->
+
+    </main>
+  
+{% endblock %}
