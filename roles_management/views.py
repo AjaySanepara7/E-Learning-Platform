@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
@@ -241,3 +242,4 @@ class ResetPasswordLink(View):
             "same_password": "The new password cannot be the same as the current password"
             }
             return render(request, "roles_management/reset_password_confirm.html", context)
+
