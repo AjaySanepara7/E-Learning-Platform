@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from django.conf import settings
-from roles_management.models import Enrollment, Course
+from course_app.models import Course
+from roles_management.models import Enrollment
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
@@ -26,13 +27,19 @@ class Home(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/home.html")
     
+class CourseView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/course.html")
+    
 
-class SignupPage(View):
+class Signup(View):
     user_form = UserForm()
     profile_form = ProfileForm()
-    template_name = "roles_management/signup_page.html"
+    template_name = "roles_management/signup.html"
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse("roles_management:dashboard"))
         user_form = UserForm()
         profile_form = ProfileForm()
         return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
@@ -51,14 +58,16 @@ class SignupPage(View):
                 course_permission = Permission.objects.get(content_type=content_type, codename="add_course")
                 user_1.user_permissions.add(course_permission)
                 user_1.save()
-            return redirect(reverse("roles_management:login_page"))
+            return redirect(reverse("roles_management:login"))
         
         return render(request, self.template_name, {"user_form": self.user_form, "profil_form": self.profile_form })
     
 
-class LoginPage(View):
+class Login(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/login_page.html")
+        if request.user.is_authenticated:
+            return redirect(reverse("roles_management:dashboard"))
+        return render(request, "roles_management/login.html")
     
     def post(self, request, *args, **kwargs):
         user = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
@@ -69,19 +78,26 @@ class LoginPage(View):
             context={
                 "login_failed": "Login failed. Invalid Credentials"
             }
-            return render(request, "roles_management/login_page.html", context)
+            return render(request, "roles_management/login.html", context)
         
 
 class Dashboard(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/dashboard.html")
+        context = {
+            'user': request.user,
+            "profile": request.user.profile_set.first()
+        }
+        return render(request, "roles_management/index.html", context)
     
-    def post(self, request, *args, **kwargs):
+    
+
+class Logout(View): 
+    def get(self, request, *args, **kwargs):
         logout(request)
         context = {
                 "logout": "Logout Successful"
             }
-        return render(request, "roles_management/login_page.html", context)
+        return render(request, "roles_management/login.html", context)
     
 
 class Enroll(View):
