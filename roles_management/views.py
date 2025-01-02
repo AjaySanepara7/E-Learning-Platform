@@ -6,7 +6,7 @@ from django.conf import settings
 from roles_management.models import Enrollment, Course
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
