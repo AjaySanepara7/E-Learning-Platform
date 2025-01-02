@@ -47,7 +47,7 @@ class LoginPage(View):
         user = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
         if user is not None:
             login(request, user)
-            return redirect(reverse("roles_management:dashboard"))
+            return redirect(reverse("roles_management:dashborad"))
         else:
             context={
                 "login_failed": "Login failed. Invalid Credentials"
