@@ -7,18 +7,8 @@ from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth import get_user_model
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from roles_management.tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.contrib import messages
 
 
-User = get_user_model()
 
 class Home(View):
     def get(self, request, *args, **kwargs):
@@ -44,11 +34,7 @@ class SignupPage(View):
             profile_1.user = user_1
             profile_1.save()
 
-            if profile_1.is_teacher == True:
-                content_type = ContentType.objects.get_for_model(Course)
-                course_permission = Permission.objects.get(content_type=content_type, codename="add_course")
-                user_1.user_permissions.add(course_permission)
-                user_1.save()
+
             return redirect(reverse("roles_management:login_page"))
         
         return render(request, self.template_name, {"user_form": self.user_form, "profil_form": self.profile_form })
