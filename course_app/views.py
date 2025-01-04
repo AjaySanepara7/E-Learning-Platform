@@ -2,9 +2,28 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from course_app.models import Course, Category
+from roles_management.models import Enrollment
 from course_app.forms import CategoryForm, CourseForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+
+
+class Courses(View):
+    def get(self, request, *args, **kwargs):
+        context = {
+             "courses": Course.objects.all()
+        }
+        return render(request, "course_app/courses.html", context)
+    
+
+class EnrolledCourses(View):
+    def get(self, request, *args, **kwargs):
+        enrollments = Enrollment.objects.filter(user=request.user)
+        context = {
+             "courses": Course.objects.all(),
+             "enrollments": enrollments
+        }
+        return render(request, "course_app/enrolled_courses.html", context)
 
 
 class CreateCourse(View):

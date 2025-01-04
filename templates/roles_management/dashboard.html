@@ -6,90 +6,183 @@
 
 {% block body %}
 
-    {% if enrolled_successfully %}<h3 class="text-center pt-5"><strong>{{ enrolled_successfully }}</strong></h3>{% endif %}
-
-    <!-- About Section -->
-    <section id="about" class="about section">
-
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-          <h2>About</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div><!-- End Section Title -->
   
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-  
-          <div class="row gy-4 justify-content-center">
-            <div class="col-lg-4">
-              <img src="{% static 'iPortfolio/assets/img/my-profile-img.jpg' %}" class="img-fluid" alt="">
-            </div>
-            <div class="col-lg-8 content">
-              <h2>{% if profile.is_teacher %}Teacher{% else %}Student{% endif %} &amp; Web Developer.</h2>
-              <p class="fst-italic py-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
-              </p>
-              <div class="row">
-                <div class="col-lg-6">
-                  <ul>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Name:</strong> <span>{{ user.username }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Firstname:</strong> <span>{{ user.first_name }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Lastname:</strong> <span>{{ user.last_name }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>{{ profile.mobile }}</span></li>
-                  </ul>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div>
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Teachers</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{teacher_count}}</h6>
+                      <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
+
+                    </div>
+                  </div>
                 </div>
-                <div class="col-lg-6">
-                  <ul>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>{{ user.email }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Country:</strong> <span>{{ profile.country }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Date of Birth:</strong> <span>{{ profile.date_of_birth }}</span></li>
-                    <li><i class="bi bi-chevron-right"></i> <strong>Gender:</strong> <span>{{ profile.gender }}</span></li>
-                  </ul>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Courses</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{course_count}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Enrollments</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{enrollment_count}}</h6>
+                    </div>
+                  </div>
+
                 </div>
               </div>
-              <p class="py-3">
-                Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt adipisci omnis et ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis.
-                Cupiditate ut dicta maxime officiis quidem quia. Sed et consectetur qui quia repellendus itaque neque.
-              </p>
-            </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Categories</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{category_count}}</h6>
+                      <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+
+           
+
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Enrolled Courses</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Course id</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for course in courses %}
+                        {% for enrollment in enrollments %}
+                          {% if enrollment.user.id == request.user.id and enrollment.course.id == course.id %}
+                            <tr>
+                              <th scope="row"><a href="#">{{ course.id }}</a></th>
+                              <td>{{ course.course_name }}</td>
+                              <td>{{ course.category }}</td>
+                              <td>$64</td>
+                            </tr>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+
+            
+
           </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <!-- <div class="col-lg-4"> -->
+          
+          
+        <!-- </div> -->
+        <!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
   
-        </div>
-  
-      </section><!-- /About Section -->
 
-    <form class=" py-5 col-9 m-auto" method="post">
-        {% csrf_token %}
-        <div class="d-flex justify-content-center mt-5 p-2">
-            <a href="{% url 'roles_management:signup' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="courses" name="courses">Courses</button>
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'roles_management:enroll' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="enroll" name="enroll">Enroll</button>
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'roles_management:login' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="enrolled_courses" name="enrolled_courses">Enrolled Courses</button>
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'course_app:create_course' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="create_course" name="create_course">Create Course</button>
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-center mt-5">
-            <button type="submit" class="submit btn btn-danger m-2" id="logout" name="logout">Logout</button>
-            <button type="button" class="submit btn btn-danger m-2" id="submit">Change Password</button>
-            <a href="{% url 'roles_management:reset_password' %}" class="text-white">
-                <button type="button" class="submit btn btn-danger m-2" id="reset_password" name="reset_password">Reset Password</button>
-            </a>
-        </div>
-    </form>
 {% endblock %}

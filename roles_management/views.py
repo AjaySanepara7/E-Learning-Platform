@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 from django.conf import settings
-from course_app.models import Course
-from roles_management.models import Enrollment
+from course_app.models import Course, Category
+from roles_management.models import Enrollment, Profile
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
@@ -19,17 +19,23 @@ from roles_management.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
-
+from django.core.serializers import serialize
+from django.core.serializers import deserialize
+import json
 
 User = get_user_model()
 
-class Home(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/home.html")
+# class Home(View):
+#     def get(self, request, *args, **kwargs):
+#         return render(request, "roles_management/home.html")
     
 class CourseView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/course.html")
+    
+class Dashboard2(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/dashboard.html")
     
 
 class Signup(View):
@@ -83,11 +89,22 @@ class Login(View):
 
 class Dashboard(View):
     def get(self, request, *args, **kwargs):
+        enrollments = Enrollment.objects.filter(user=request.user)
+        courses = [enrollment.course for enrollment in enrollments]
+        teachers = Profile.objects.filter(is_teacher=True)
+        is_enrolled = Enrollment.objects.filter()
         context = {
-            'user': request.user,
-            "profile": request.user.profile_set.first()
+            "enrollments": enrollments,
+            "courses": courses,
+            "enrollment_count": len(enrollments),
+            "course_count": len(Course.objects.all()),
+            "category_count": len(Category.objects.all()),
+            "teacher_count": len(teachers)
         }
-        return render(request, "roles_management/index.html", context)
+        return render(request, "roles_management/dashboard.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        return redirect(reverse("roles_management:login"))
     
     
 
