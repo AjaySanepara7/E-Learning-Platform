@@ -36,7 +36,7 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate method="post" action="{% url 'roles_management:signup' %}">
+                  <form class="row g-3 needs-validation" novalidate method="post" enctype="multipart/form-data" action="{% url 'roles_management:signup' %}" id="signup_form">
                     {% csrf_token %}
 
                         {{ user_form.non_field_errors }}
@@ -191,11 +191,11 @@
                             <div>
                                 {{ profile_form.resume.errors }}
                             </div>
-                            <legend class="my-3 h6">Upload profile picture</legend>
+                            <legend class="my-3 h6">Upload Resume</legend>
                             <div>
                                 <input type="file" name="resume" class="form-control" id="id_resume">
                             </div>
-                            <label for="id_resume" class="error">Please upload an image</label>
+                            <label for="id_resume" class="error">Please upload your resume</label>
                         </fieldset>
             
                         <div>
@@ -219,6 +219,7 @@
 
                         <div class="col-12">
                             <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                            <button class="btn btn-primary w-100 mt-4" type="button" id="auto_fill">Auto Fill</button>
                         </div>
 
                         <div class="col-12">

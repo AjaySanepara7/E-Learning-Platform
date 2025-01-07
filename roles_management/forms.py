@@ -41,7 +41,7 @@ class EnrollmentForm(forms.ModelForm):
         self.fields["course"] = forms.ModelChoiceField(
             queryset=Course.objects.all(),
             widget = forms.Select(attrs={
-                "class": "form-control border border-2 border-dark",
+                "class": "form-select",
                 "placeholder": "Course"}),
             empty_label = "Select a Course"
         )

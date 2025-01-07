@@ -35,7 +35,7 @@ class CourseView(View):
     
 class Dashboard2(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/dashboard.html")
+        return render(request, "roles_management/dashboard2.html")
     
 
 class Signup(View):
@@ -54,7 +54,9 @@ class Signup(View):
         bound_user_form = UserForm(request.POST)
         bound_profile_form = ProfileForm(request.POST, request.FILES)
         if bound_user_form.is_valid() and bound_profile_form.is_valid():
-            user_1 = bound_user_form.save()
+            user_1 = bound_user_form.save(commit=False)
+            user_1.set_password(bound_user_form.cleaned_data['password'])
+            user_1.save()
             profile_1 = bound_profile_form.save(commit=False)
             profile_1.user = user_1
             profile_1.save()
@@ -115,6 +117,16 @@ class Logout(View):
                 "logout": "Logout Successful"
             }
         return render(request, "roles_management/login.html", context)
+    
+
+class ProfileView(View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            "user": request.user,
+            "profile": request.user.profile_set.first()
+        }
+        return render(request, "roles_management/profile.html", context)
+
     
 
 class Enroll(View):

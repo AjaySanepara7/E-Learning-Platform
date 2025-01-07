@@ -2,30 +2,37 @@
 
 {% load static %}
 
-{% block title %} Home {% endblock %}
+{% block title %} Signup_page {% endblock %}
 
-{% block body %} 
+{% block body %}
+<div class="p-3 col-sm-6 mx-auto container my-5">
+    <div class="top-line"></div>
+    <div class="formbox p-5">
+        
+        <h1 class="text-center pt-5 mb-5">Enroll in a Course</h1>
+        {% if already_enrolled %}<h3 class="text-center pt-5"><strong>{{ already_enrolled }}</strong></h3>{% endif %}   
 
-    {% if already_enrolled %}<h3 class="text-center pt-5"><strong>{{ already_enrolled }}</strong></h3>{% endif %}   
+        <!-- Multi Columns Form -->
+        <form class="row g-3 py-5 cmxform" method="post" autocomplete="off" action="{% url 'roles_management:enroll' %}">
+            {% csrf_token %}
+            {{ enroll_form.non_field_errors }}
 
-    <form class=" py-5 col-9 m-auto" method="post">
-        {% csrf_token %}
-        {{ enroll_form.non_field_errors }}
-
-        <div>
-            <div>
-                {{ enroll_form.course.errors }}
+            <div class="col-md-12">
+                <div>
+                    {{ enroll_form.course.errors }}
+                </div>
+                <div class="fieldWrapper input-group mb-5">
+                    {{ enroll_form.course }}
+                </div>
+                <label for="{{ enroll_form.course.id_for_label }}" class="error">Please select a course </label>
             </div>
-            <div class="fieldWrapper input-group mb-5">
-                {{ enroll_form.course }}
+
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary" id="create_course" name="submit">Enroll</button>
             </div>
-            <label for="{{ enroll_form.course.id_for_label }}" class="error">Please select a course </label>
-        </div>
 
-        <div class="d-flex justify-content-center m-2 p-2">
-                <button type="submit" class="submit btn btn-success" id="enroll" name="enroll">Enroll</button>
-        </div>
-
-    </form>
-
+          </form><!-- End Multi Columns Form -->
+    </div>
+</div>
 {% endblock %}

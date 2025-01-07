@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}  {% endblock %}
+
+{% block body %}
+    <main id="main" class="main">
+        <section class="section">
+            <h6 class="display-1 text-center course_heading">{{course.course_name}}</h6>
+            <div class="row align-items-top justify-content-around">
+
+                <!-- Card with header and footer -->
+                <div class="card  m-2 my-5">
+                    <div class="card-header"><img src="{{ course.course_image.url }}" class="card-img-top" alt="..."></div>
+                    <div class="card-body">
+                    <h5 class="card-title">{{ course.course_name }}</h5>
+                    <div class="mb-4">{{course.course_description}}</div>
+                    <div><a href="{% url 'course_app:course_detail' course.id %}"><button class="btn btn-success">Enroll</button></a></div>
+                    </div>
+                </div><!-- End Card with header and footer -->
+
+                    
+            </div>
+        </section>
+    </main>
+
+
+
+{% endblock %}

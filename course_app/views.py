@@ -6,12 +6,18 @@ from roles_management.models import Enrollment
 from course_app.forms import CategoryForm, CourseForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, get_object_or_404
 
 
 class Courses(View):
     def get(self, request, *args, **kwargs):
+        courses = Course.objects.all()
+        is_enrolled = {}
+        enrolled_courses = Enrollment.objects.filter(user=request.user).values_list('course_id', flat=True)
+        is_enrolled = {course_id: True for course_id in enrolled_courses}
         context = {
-             "courses": Course.objects.all()
+             "courses": courses,
+             "is_enrolled": is_enrolled
         }
         return render(request, "course_app/courses.html", context)
     
@@ -24,6 +30,13 @@ class EnrolledCourses(View):
              "enrollments": enrollments
         }
         return render(request, "course_app/enrolled_courses.html", context)
+    
+
+class CourseDetail(View):
+    def get(self, request, *args, **kwargs):
+        course_id = kwargs.get("course_id")
+        course = get_object_or_404(Course, id=course_id)
+        return render(request, "course_app/course_detail.html", {"course": course})
 
 
 class CreateCourse(View):

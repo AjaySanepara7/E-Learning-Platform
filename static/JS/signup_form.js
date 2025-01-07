@@ -14,6 +14,22 @@ $(document).ready(function(){
         change_password_validation()
     })
 
+    $('#auto_fill').click(function(e){
+        e.preventDefault();
+        
+            $('#signup_form #id_username').val("user_");
+            $('#signup_form #id_first_name').val("Ajay");
+            $('#signup_form #id_last_name').val("Sanepara");
+            $('#signup_form #id_email').val("ajay@gmail.com");
+            $('#signup_form #password').val("asdfghjkl1@A");
+            $('#signup_form #id_confirm_password').val("asdfghjkl1@A");
+            $('#signup_form #id_mobile').val("123456789");
+            $('#signup_form #id_date_of_birth').val("2000-01-01");
+            $('#signup_form #id_gender_0').prop("checked", true);
+            $('#signup_form #id_country').val("IN");
+            $('#signup_form #id_is_teacher').prop("checked", true);
+    })
+
     
     function validation(){
         $("#signupForm").validate({
