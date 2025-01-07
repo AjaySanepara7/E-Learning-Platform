@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block body %}
+
+    {% if enrolled_successfully %}<h3 class="text-center pt-5"><strong>{{ enrolled_successfully }}</strong></h3>{% endif %}
+    <!-- {{ request.session.course_count }} -->
+    <!-- {{ request.session.user }} -->
+    <!-- {{ enrollment_count }} -->
+    <!-- {% if request.session.user %}<h3 class="text-center pt-5"><strong>{{ request.session.user }}</strong></h3>{% endif %}  -->
+    <!-- {% if request.session.course_count %}<h3 class="text-center pt-5"><strong>{{ request.session.course_count }}</strong></h3>{% endif %}  -->
+    <form class=" py-5 col-9 m-auto" method="post">
+        <h3 class="text-center pt-5"><strong>{{ teacher_count }}</strong></h3>
+        <h2>Enrollments:</h2>
+        <ul>
+            {% for enrollment in enrollments %}
+                <li><strong>Course:</strong> {{ enrollment.course.course_name }}</li>
+                <hr>
+            {% endfor %}
+        </ul>
+        {% csrf_token %}
+        <!-- {{ request.session.course_count }} -->
+        <div class="d-flex justify-content-center mt-5 p-2">
+            <a href="{% url 'roles_management:signup' %}" class="text-white">
+                <button type="button" class="submit btn btn-success" id="courses" name="courses">{{ request.session.user }}</button>
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-center m-2 p-2">
+            <a href="{% url 'roles_management:enroll' %}" class="text-white">
+                <button type="button" class="submit btn btn-success" id="enroll" name="enroll">Enroll</button>
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-center m-2 p-2">
+            <a href="{% url 'roles_management:login' %}" class="text-white">
+                <button type="button" class="submit btn btn-success" id="enrolled_courses" name="enrolled_courses">Enrolled Courses</button>
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-center m-2 p-2">
+            <a href="{% url 'course_app:create_course' %}" class="text-white">
+                <button type="button" class="submit btn btn-success" id="create_course" name="create_course">Create Course</button>
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+            <a href="{% url 'roles_management:logout' %}" class="text-white">
+                <button type="button" class="submit btn btn-danger m-2" id="logout" name="logout">Logout</button>
+            </a>
+            <button type="button" class="submit btn btn-danger m-2" id="submit">Change Password</button>
+            <a href="{% url 'roles_management:reset_password' %}" class="text-white">
+                <button type="button" class="submit btn btn-danger m-2" id="reset_password" name="reset_password">Reset Password</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

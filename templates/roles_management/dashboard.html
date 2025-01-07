@@ -6,40 +6,183 @@
 
 {% block body %}
 
-    {% if enrolled_successfully %}<h3 class="text-center pt-5"><strong>{{ enrolled_successfully }}</strong></h3>{% endif %}
+  
 
-    <form class=" py-5 col-9 m-auto" method="post">
-        {% csrf_token %}
-        <div class="d-flex justify-content-center mt-5 p-2">
-            <a href="{% url 'roles_management:signup_page' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="courses" name="courses">Courses</button>
-            </a>
-        </div>
+  <main id="main" class="main">
 
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'roles_management:enroll' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="enroll" name="enroll">Enroll</button>
-            </a>
-        </div>
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
 
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'roles_management:login_page' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="enrolled_courses" name="enrolled_courses">Enrolled Courses</button>
-            </a>
-        </div>
+    <section class="section dashboard">
+      <div class="row">
 
-        <div class="d-flex justify-content-center m-2 p-2">
-            <a href="{% url 'course_app:create_course' %}" class="text-white">
-                <button type="button" class="submit btn btn-success" id="create_course" name="create_course">Create Course</button>
-            </a>
-        </div>
+        <!-- Left side columns -->
+        <div>
+          <div class="row">
 
-        <div class="d-flex justify-content-center mt-5">
-            <button type="submit" class="submit btn btn-danger m-2" id="logout" name="logout">Logout</button>
-            <button type="button" class="submit btn btn-danger m-2" id="submit">Change Password</button>
-            <a href="{% url 'roles_management:reset_password' %}" class="text-white">
-                <button type="button" class="submit btn btn-danger m-2" id="reset_password" name="reset_password">Reset Password</button>
-            </a>
-        </div>
-    </form>
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Teachers</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{teacher_count}}</h6>
+                      <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Courses</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{course_count}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Enrollments</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{enrollment_count}}</h6>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Categories</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{category_count}}</h6>
+                      <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+
+           
+
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Enrolled Courses</h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Course id</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for course in courses %}
+                        {% for enrollment in enrollments %}
+                          {% if enrollment.user.id == request.user.id and enrollment.course.id == course.id %}
+                            <tr>
+                              <th scope="row"><a href="#">{{ course.id }}</a></th>
+                              <td>{{ course.course_name }}</td>
+                              <td>{{ course.category }}</td>
+                              <td>$64</td>
+                            </tr>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+
+            
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <!-- <div class="col-lg-4"> -->
+          
+          
+        <!-- </div> -->
+        <!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  
+
 {% endblock %}

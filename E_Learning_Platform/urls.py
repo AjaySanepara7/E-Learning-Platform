@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('roles_management.urls')),
-    path('course', include('course_app.urls')),
+    path('course/', include('course_app.urls')),
 ]
 
 if settings.DEBUG:
