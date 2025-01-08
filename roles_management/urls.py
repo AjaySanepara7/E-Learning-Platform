@@ -15,5 +15,11 @@ urlpatterns = [
     path("dashboard", login_required(views.Dashboard.as_view()), name="dashboard"),    
     path("profile", login_required(views.ProfileView.as_view()), name="profile"),    
     path("enroll/<int:course_id>", login_required(views.Enroll.as_view()), name="enroll"),
-    
+    path('password-reset/', views.ResetPasswordView.as_view(), name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', 
+         auth_views.PasswordResetConfirmView.as_view(template_name='roles_management/password_reset_confirm.html'),
+          name='password_reset_confirm'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='roles_management/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]

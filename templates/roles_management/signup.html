@@ -22,7 +22,7 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="{% static 'NiceAdmin/assets/img/logo.png' %}" alt="">
+                  <img src="{% static 'Assets/img/logo.png' %}" alt="">
                   <span class="d-none d-lg-block">E-Learning</span>
                 </a>
               </div><!-- End Logo -->
@@ -36,7 +36,7 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate method="post" enctype="multipart/form-data" action="{% url 'roles_management:signup' %}" id="signup_form">
+                  <form class="row g-3" novalidate method="post" enctype="multipart/form-data" action="{% url 'roles_management:signup' %}" id="signup_form">
                     {% csrf_token %}
 
                         {{ user_form.non_field_errors }}
@@ -48,7 +48,7 @@
                             <div class="col-12">
                                 <label for="id_username" class="form-label">Your Name</label>
                                 <input type="text" name="username" maxlength="150" class="form-control" id="id_username" placeholder="Username" aria-describedby="id_username_helptext" required>
-                                <div class="invalid-feedback">Please, enter your name!</div>
+                                <label for="id_username" class="error">Please, enter your name!</label>
                             </div>
                         </div>
 
@@ -58,8 +58,8 @@
                             </div>
                             <div class="col-12">
                                 <label for="id_first_name" class="form-label">First Name</label>
-                                <input type="text" name="first_name" maxlength="150" class="form-control" id="id_first_name" placeholder="First Name">
-                                <div class="invalid-feedback">Please, enter your name!</div>
+                                <input type="text" name="first_name" maxlength="150" class="form-control" id="id_first_name" placeholder="First Name" required>
+                                <label for="id_first_name" class="error">Please, enter your firstname!</label>
                             </div>
                         </div>
 
@@ -69,8 +69,8 @@
                             </div>
                             <div class="col-12">
                                 <label for="id_last_name" class="form-label">Last Name</label>
-                                <input type="text" name="last_name" maxlength="150" class="form-control" id="id_last_name" placeholder="Last Name">
-                                <div class="invalid-feedback">Please, enter your name!</div>
+                                <input type="text" name="last_name" maxlength="150" class="form-control" id="id_last_name" placeholder="Last Name" required>
+                                <label for="id_last_name" class="error">Please, enter your lastname!</label>
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@
                             <div class="col-12">
                                 <label for="id_email" class="form-label">Email</label>
                                 <input type="email" name="email" class="form-control" id="id_email" placeholder="Email" required>
-                                <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                                <label for="id_email" class="error">Please enter a valid Email adddress!</label>
                             </div>
                         </div>
 
@@ -94,8 +94,8 @@
                                 <div class="input-group has-validation">
                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
                                 <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
-                                <div class="invalid-feedback">Please choose a username.</div>
-                                </div>
+                            </div>
+                            <label for="password" class="error">Please enter your password</label>
                             </div>
                         </div>
 
@@ -106,7 +106,7 @@
                             <div class="col-12">
                                 <label for="id_confirm_password" class="form-label">Confirm Password</label>
                                 <input type="password" name="confirm_password" class="form-control" id="id_confirm_password" placeholder="Confirm Password" required>
-                                <div class="invalid-feedback">Please enter your password!</div>
+                                <label for="id_confirm_password" class="error">Please enter the same password!</label>
                             </div>
                         </div>
 
@@ -117,7 +117,7 @@
                             <div class="col-12">
                                 <label for="id_mobile" class="form-label">Mobile Number</label>
                                 <input type="password" name="mobile" class="form-control" id="id_mobile" placeholder="Mobile Number" required>
-                                <div class="invalid-feedback">Please enter your password!</div>
+                                <label for="id_mobile" class="error">Please enter Mobile Number</label>
                             </div>
                         </div>
 
@@ -133,6 +133,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                            <label for="id_country" class="error">Please select a country</label>
                         </div>
 
 
@@ -144,7 +145,7 @@
                             <div class="col-12">
                                 <label for="id_date_of_birth" class="form-label">Date of Birth</label>
                                 <input type="date" name="date_of_birth" class="form-control" id="id_date_of_birth" required>
-                                <div class="invalid-feedback">Please enter Date of Birth</div>
+                                <label for="id_date_of_birth" class="error">Please enter Date of Birth</label>
                             </div>
                         </div>
 
@@ -173,7 +174,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div for="gender" class="error">Please select your gender</div>
+                            <label for="gender" class="error">Please select your gender</label>
                         </fieldset>
 
                         <fieldset>
@@ -206,19 +207,18 @@
                             <div class="input-group mt-2 my-3">
                                 <input type="checkbox" name="is_teacher" id="id_is_teacher" class="form-check-input">
                             </div>
-                            <label for="id_is_teacher" class="error">Please enter Date of Birth</label>
                         </div>
 
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <div class="form-check">
                             <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
                             <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
                             <div class="invalid-feedback">You must agree before submitting.</div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-12">
-                            <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                            <button class="btn btn-primary w-100" type="submit" id="submit">Create Account</button>
                             <button class="btn btn-primary w-100 mt-4" type="button" id="auto_fill">Auto Fill</button>
                         </div>
 
