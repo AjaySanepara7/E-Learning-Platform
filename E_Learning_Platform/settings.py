@@ -70,6 +70,7 @@ MEDIA_URL = '/media/'
 LOGIN_URL = 'http://127.0.0.1:8000/'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
