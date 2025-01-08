@@ -19,25 +19,21 @@ from roles_management.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
-from django.core.serializers import serialize
-from django.core.serializers import deserialize
-import json
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+
 
 User = get_user_model()
-
-# class Home(View):
-#     def get(self, request, *args, **kwargs):
-#         return render(request, "roles_management/home.html")
     
 class CourseView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/course.html")
     
-class Dashboard2(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/dashboard2.html")
-    
 
+
+    
+    
 class Signup(View):
     user_form = UserForm()
     profile_form = ProfileForm()
@@ -109,7 +105,6 @@ class Dashboard(View):
         return redirect(reverse("roles_management:login"))
     
     
-
 class Logout(View): 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -127,36 +122,17 @@ class ProfileView(View):
         }
         return render(request, "roles_management/profile.html", context)
 
-    
 
 class Enroll(View):
-    enroll_form = EnrollmentForm()
-
     def get(self, request, *args, **kwargs):
-        enroll_form = EnrollmentForm()
-        return render(request, "roles_management/enroll.html", {"enroll_form": enroll_form})
-    
-    def post(self, request, *args, **kwargs):
-        enroll_form = EnrollmentForm(request.POST)
-        user = request.user
-        
-        if enroll_form.is_valid():
-            enrollment = enroll_form.save(commit=False)
-            enrollment_object = Enrollment.objects.filter(user=user, course=enrollment.course)
-            if enrollment_object:
-                context = {
-                    "already_enrolled": "User is already enrolled in this course select another course",
-                    "enroll_form": EnrollmentForm()
-                }
-                return render(request, "roles_management/enroll.html", context)
-            else:
-                enrollment.user = user
-                enrollment.is_active = True
-                enrollment.save()
-                return render(request, "roles_management/dashboard.html", {"enrolled_successfully": "Enrollment Successfull"})
-        return render(request, "roles_management/enroll.html", {"enroll_form": EnrollmentForm()})
-    
-
+        course_id = kwargs.get("course_id")
+        course = Course.objects.get(id=course_id)
+        Enrollment.objects.create(user=request.user, course=course, is_active=True)
+        context = {
+            "course": course,
+            "enrolled_successfully": "Enrolled Successfully"
+        }
+        return render(request, "course_app/course_detail.html", context)
 
 
 class ResetPassword(View):

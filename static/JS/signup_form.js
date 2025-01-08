@@ -32,7 +32,7 @@ $(document).ready(function(){
 
     
     function validation(){
-        $("#signupForm").validate({
+        $("#signup_form").validate({
             rules: {
                 username: {
                     required: true,
@@ -59,7 +59,8 @@ $(document).ready(function(){
                     dateFormat: true
                 },
                 gender: "required",
-                hobby: "required"
+                mobile: "required",
+                country: "required"
             },
             messages: {
                 username: {
@@ -85,6 +86,8 @@ $(document).ready(function(){
                     required: "Please enter Date of Birth",
                 },
                 gender: "Please select your gender",
+                mobile: "Please enter your mobile number",
+                country: "Please select a country",
                 hobby: "Please select atleast one hobby"
             }
         })
