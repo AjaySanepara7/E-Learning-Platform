@@ -20,7 +20,7 @@ $(document).ready(function(){
             $('#signup_form #id_username').val("user_");
             $('#signup_form #id_first_name').val("Ajay");
             $('#signup_form #id_last_name').val("Sanepara");
-            $('#signup_form #id_email').val("ajay@gmail.com");
+            $('#signup_form #id_email').val("ajaysanepara03@gmail.com");
             $('#signup_form #password').val("asdfghjkl1@A");
             $('#signup_form #id_confirm_password').val("asdfghjkl1@A");
             $('#signup_form #id_mobile').val("123456789");

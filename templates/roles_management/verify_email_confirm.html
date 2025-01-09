@@ -1,0 +1,17 @@
+{% extends "second_base.html" %}
+
+{% load static %}
+
+{% block title %} Email verification successful {% endblock %}
+
+{% block body %}
+    <div class="container text-center mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

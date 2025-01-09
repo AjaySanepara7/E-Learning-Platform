@@ -1,0 +1,15 @@
+{% extends "second_base.html" %}
+
+{% load static %}
+
+{% block title %} Email verification successful {% endblock %}
+
+{% block body %}
+    <div class="text-center">
+        <h1 class="mt-4">You need to verify your email</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input class="btn btn-primary max-btn mt-5" type="submit" value="Verify">
+        </form>
+    </div>
+{% endblock %}

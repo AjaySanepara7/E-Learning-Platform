@@ -6,6 +6,7 @@ from django.conf import settings
 from course_app.models import Course, Category
 from roles_management.models import Enrollment, Profile
 from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
+from roles_management.tokens import account_activation_token 
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
@@ -15,7 +16,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from roles_management.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -31,10 +31,20 @@ class CourseView(View):
         return render(request, "roles_management/course.html")
     
 
+class PasswordResetConfirmView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/password_reset_confirm.html")
+    
+
+class PasswordResetCompleteView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "roles_management/password_reset_complete.html")
+    
+
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'roles_management/password_reset.html'
     email_template_name = 'roles_management/password_reset_email.html'
-    subject_template_name = 'roles_management/password_reset_subject'
+    subject_template_name = 'roles_management/password_reset_subject.txt'
     success_message = "We've emailed you instructions for setting your password, " \
                       "if an account exists with the email you entered. You should receive them shortly." \
                       " If you don't receive an email, " \
@@ -59,7 +69,8 @@ class Signup(View):
         bound_profile_form = ProfileForm(request.POST, request.FILES)
         if bound_user_form.is_valid() and bound_profile_form.is_valid():
             user_1 = bound_user_form.save(commit=False)
-            user_1.set_password(bound_user_form.cleaned_data['password'])
+            user_1.set_password(bound_user_form.cleaned_data.get('password'))
+            user_1.is_active = False
             user_1.save()
             profile_1 = bound_profile_form.save(commit=False)
             profile_1.user = user_1
@@ -70,7 +81,8 @@ class Signup(View):
                 course_permission = Permission.objects.get(content_type=content_type, codename="add_course")
                 user_1.user_permissions.add(course_permission)
                 user_1.save()
-            return redirect(reverse("roles_management:login"))
+            email = user_1.email
+            return redirect(reverse("roles_management:verify-email")+ f"?email={email}")
         
         return render(request, self.template_name, {"user_form": self.user_form, "profil_form": self.profile_form })
     
@@ -143,7 +155,7 @@ class Enroll(View):
         return render(request, "course_app/course_detail.html", context)
 
 
-class ResetPassword(View):
+class ResetPassword2(View):
     context = {}
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/reset_password.html")
@@ -160,21 +172,64 @@ class ResetPassword(View):
             self.context['result'] = f'Error sending email: {e}'
 
         return render(request, "roles_management/reset_password.html", {"link": "Click the link sent to your registered email id to reset password"})
+    
+
+class ResetPassword(View):
+    context = {}
+    def get(self, request, *args, **kwargs):
+        html_content = f"<p>Click this link to <a href='http://127.0.0.1:8000/profile'> Reset <a> password.</p>"
+        try:
+            msg = EmailMultiAlternatives("reset password", "message", settings.EMAIL_HOST_USER, ["ajaysanepara03@gmail.com"])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            self.context['result'] = 'Email sent successfully'
+        except Exception as e:
+            self.context['result'] = f'Error sending email: {e}'
+
+        return render(request, "roles_management/profile.html")
+
+
+# class ResetPassword(View):
+#     def get(self, request, *args, **kwargs):
+#         if request.user.email_is_verified != True:
+#             current_site = get_current_site(request)
+#             user = request.user
+#             email = request.user.email
+#             subject = "Verify Email"
+#             message = render_to_string('roles_management/password_reset_email.html', {
+#                 'request': request,
+#                 'user': user,
+#                 'domain': current_site.domain,
+#                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+#                 'token':account_activation_token.make_token(user),
+#             })
+#             email = EmailMessage(
+#                 subject, message, to=[email]
+#             )
+#             email.content_subtype = 'html'
+#             email.send()
+#             return redirect('verify-email-done')
+#         else:
+#             return redirect('signup')
+#         return render(request, 'user/verify_email.html')
 
 
         
 
 class VerifyEmail(View):
     def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/verify_email.html", {"user": request.user})
+        email = request.GET.get("email")
+        user = User.objects.get(email=email)
+        return render(request, "roles_management/verify_email.html", {"user": user})
     
     def post(self, request, *args, **kwargs):
-        if not request.user.email_is_verified:
+        email = request.GET.get("email")
+        user = User.objects.get(email=email)
+        if user.is_active != True:
             current_site = get_current_site(request)
-            user = request.user
-            email = request.user.email
+            email = email
             subject = "Verify Email"
-            message = render_to_string('user/verify_email_message.html', {
+            message = render_to_string('roles_management/verify_email_message.html', {
                 'request': request,
                 'user': user,
                 'domain': current_site.domain,
@@ -186,14 +241,14 @@ class VerifyEmail(View):
             )
             email.content_subtype = 'html'
             email.send()
-            return redirect('verify-email-done')
+            return redirect(reverse("roles_management:verify-email-done"))
         else:
-            return redirect('signup')
+            return redirect(reverse("roles_management:signup"))
         
 
 class VerifyEmailDone(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'users/verify_email_done.html')
+        return render(request, 'roles_management/verify_email_done.html')
     
 
 class VerifyEmailConfirm(View):
@@ -204,18 +259,19 @@ class VerifyEmailConfirm(View):
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
         if user is not None and account_activation_token.check_token(user, token):
-            user.email_is_verified = True
+            # profile = user.profile_set.first()
+            user.is_active = True
             user.save()
             messages.success(request, 'Your email has been verified.')
-            return redirect('verify-email-complete')
+            return redirect(reverse("roles_management:verify-email-complete"))
         else:
             messages.warning(request, 'The link is invalid.')
-        return render(request, 'user/verify_email_confirm.html')
+        return render(request, 'roles_management/verify_email_confirm.html')
     
 
 class VerifyEmailComplete(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'user/verify_email_complete.html')
+        return render(request, 'roles_management/verify_email_complete.html')
     
 
 

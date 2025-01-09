@@ -16,6 +16,7 @@ class Profile(TimeStampedModel):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email_is_verified = models.BooleanField(default=False)
     gender = models.CharField(max_length=20, choices=person_gender)
     date_of_birth = models.DateField()
     mobile = models.CharField(max_length=25, unique=True)
