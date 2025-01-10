@@ -6,8 +6,7 @@ from django_extensions.db.models import TimeStampedModel
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
-
-
+    
 class Profile(TimeStampedModel):
     person_gender = [
         ("M", "Male"),
@@ -16,6 +15,7 @@ class Profile(TimeStampedModel):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email_is_verified = models.BooleanField(default=False)
     gender = models.CharField(max_length=20, choices=person_gender)
     date_of_birth = models.DateField()
     mobile = models.CharField(max_length=25, unique=True)
@@ -38,3 +38,5 @@ class Enrollment(TimeStampedModel):
 
     class Meta:
         unique_together = ('user', 'course')
+
+

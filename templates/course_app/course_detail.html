@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load custom_app_extras %}
 
 {% block title %}  {% endblock %}
 
@@ -10,13 +11,23 @@
             <h6 class="display-1 text-center course_heading">{{course.course_name}}</h6>
             <div class="row align-items-top justify-content-around">
 
+                {% if enrolled_successfully %}<h3 class="text-center pt-5"><strong>{{ enrolled_successfully }}</strong></h3>{% endif %} 
                 <!-- Card with header and footer -->
-                <div class="card  m-2 my-5">
+                <div class="card col-lg-8 m-2 my-5">
                     <div class="card-header"><img src="{{ course.course_image.url }}" class="card-img-top" alt="..."></div>
                     <div class="card-body">
                     <h5 class="card-title">{{ course.course_name }}</h5>
                     <div class="mb-4">{{course.course_description}}</div>
-                    <div><a href="{% url 'course_app:course_detail' course.id %}"><button class="btn btn-success">Enroll</button></a></div>
+                    <div class="d-flex">
+                        {% if enrollment_status == False %}
+                            <div>
+                                <a href="{% url 'roles_management:enroll' course.id %}"><button class="btn btn-primary me-4">Enroll</button></a>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'course_app:courses' %}"><button class="btn btn-secondary">Back</button></a>
+                        </div>
+                    </div>
                     </div>
                 </div><!-- End Card with header and footer -->
 

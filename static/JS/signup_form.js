@@ -10,7 +10,7 @@ $(document).ready(function(){
         validation()
     })
 
-    $("#change_password").click(function(e){
+    $("#reset_password_button").click(function(e){
         change_password_validation()
     })
 
@@ -20,7 +20,7 @@ $(document).ready(function(){
             $('#signup_form #id_username').val("user_");
             $('#signup_form #id_first_name').val("Ajay");
             $('#signup_form #id_last_name').val("Sanepara");
-            $('#signup_form #id_email').val("ajay@gmail.com");
+            $('#signup_form #id_email').val("ajaysanepara03@gmail.com");
             $('#signup_form #password').val("asdfghjkl1@A");
             $('#signup_form #id_confirm_password').val("asdfghjkl1@A");
             $('#signup_form #id_mobile').val("123456789");
@@ -32,7 +32,7 @@ $(document).ready(function(){
 
     
     function validation(){
-        $("#signupForm").validate({
+        $("#signup_form").validate({
             rules: {
                 username: {
                     required: true,
@@ -59,7 +59,8 @@ $(document).ready(function(){
                     dateFormat: true
                 },
                 gender: "required",
-                hobby: "required"
+                mobile: "required",
+                country: "required"
             },
             messages: {
                 username: {
@@ -85,38 +86,32 @@ $(document).ready(function(){
                     required: "Please enter Date of Birth",
                 },
                 gender: "Please select your gender",
+                mobile: "Please enter your mobile number",
+                country: "Please select a country",
                 hobby: "Please select atleast one hobby"
             }
         })
     }
 
     function change_password_validation(){
-        $("#change_password").validate({
+        $("#reset_password_form").validate({
             rules: {
-                username: {
-                    required: true,
-                    minlength: 2
-                },
                 current_password: {
                     required: true,
                 },
-                password: {
+                new_password: {
                     required: true,
                     password_validation: true
                 },
-                confirm_password: {
+                confirm_new_password: {
                     required: true,
                     password_validation: true,
-                    equalTo: "#password"
+                    equalTo: "#id_new_password1"
                 },
             },
             messages: {
-                username: {
-                    required: "Please enter a username",
-                    minlength: "Your username must consist of at least 2 characters"
-                },
                 current_password: {
-                    required: "Please provide a password",
+                    required: "Please provide the current password",
                 },
                 password: {
                     required: "Please provide a password",

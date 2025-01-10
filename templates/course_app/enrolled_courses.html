@@ -18,7 +18,7 @@
                         <h5 class="card-title">{{ enrollment.course.course_name }}</h5>
                         <div class="mb-4">{{enrollment.course.category}}</div>
                         <div class="mb-4">{{enrollment.course.course_description}}</div>
-                        <div><a href="{% url 'course_app:course_detail' enrollment.course.id %}"><button class="btn btn-success">Details</button></a></div>
+                        <div><a href="{% url 'course_app:course_detail' enrollment.course.id %}"><button class="btn btn-primary">Details</button></a></div>
                         </div>
                     </div><!-- End Card with header and footer -->
                 {% endfor %}
