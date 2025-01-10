@@ -5,8 +5,8 @@ from django.views import View
 from django.conf import settings
 from course_app.models import Course, Category
 from roles_management.models import Enrollment, Profile
-from roles_management.forms import UserForm, ProfileForm, EnrollmentForm
-from roles_management.tokens import account_activation_token 
+from roles_management.forms import UserForm, ProfileForm, EnrollmentForm, ResetPasswordForm
+from roles_management.tokens import account_activation_token, reset_password_token 
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
@@ -39,17 +39,6 @@ class PasswordResetConfirmView(View):
 class PasswordResetCompleteView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/password_reset_complete.html")
-    
-
-class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
-    template_name = 'roles_management/password_reset.html'
-    email_template_name = 'roles_management/password_reset_email.html'
-    subject_template_name = 'roles_management/password_reset_subject.txt'
-    success_message = "We've emailed you instructions for setting your password, " \
-                      "if an account exists with the email you entered. You should receive them shortly." \
-                      " If you don't receive an email, " \
-                      "please make sure you've entered the address you registered with, and check your spam folder."
-    success_url = reverse_lazy("roles_management:signup")
     
     
 class Signup(View):
@@ -153,68 +142,87 @@ class Enroll(View):
             "enrolled_successfully": "Enrolled Successfully"
         }
         return render(request, "course_app/course_detail.html", context)
+    
 
-
-class ResetPassword2(View):
-    context = {}
+class ResetPassword(View):
     def get(self, request, *args, **kwargs):
         return render(request, "roles_management/reset_password.html")
     
     def post(self, request, *args, **kwargs):
-        recepient_id = request.POST.get("email")
-        html_content = "<p>Click this link to <a href='http://127.0.0.1:8000/reset_password_confirm'> Reset <a> password.</p>"
-        try:
-            msg = EmailMultiAlternatives("reset password", "message", settings.EMAIL_HOST_USER, [recepient_id])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
-            self.context['result'] = 'Email sent successfully'
-        except Exception as e:
-            self.context['result'] = f'Error sending email: {e}'
-
-        return render(request, "roles_management/reset_password.html", {"link": "Click the link sent to your registered email id to reset password"})
+        current_site = get_current_site(request)
+        user = request.user
+        email = request.user.email
+        subject = "Reset Password"
+        message = render_to_string('roles_management/reset_password_message.html', {
+            'request': request,
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': reset_password_token.make_token(user),
+        })
+        email = EmailMessage(
+            subject, message, to=[email]
+        )
+        email.content_subtype = 'html'
+        email.send()
+        return redirect(reverse("roles_management:reset-password-done"))
     
 
-class ResetPassword(View):
-    context = {}
+class ResetPasswordDone(View):
     def get(self, request, *args, **kwargs):
-        html_content = f"<p>Click this link to <a href='http://127.0.0.1:8000/profile'> Reset <a> password.</p>"
+        return render(request, "roles_management/reset_password_done.html")
+    
+
+class ResetPasswordConfirm(View):
+    def get(self, request, uidb64, token, *args, **kwargs):
         try:
-            msg = EmailMultiAlternatives("reset password", "message", settings.EMAIL_HOST_USER, ["ajaysanepara03@gmail.com"])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
-            self.context['result'] = 'Email sent successfully'
-        except Exception as e:
-            self.context['result'] = f'Error sending email: {e}'
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and reset_password_token.check_token(user, token):
+            context = {
+                "validlink": True,
+                "reset_password_form": ResetPasswordForm()
+            }
+            return render(request, "roles_management/reset_password_change.html", context)
+        else:
+            messages.warning(request, 'The link is invalid.')
+        return render(request, 'roles_management/reset_password_confirm.html')
+    
 
-        return render(request, "roles_management/profile.html")
-
-
-# class ResetPassword(View):
-#     def get(self, request, *args, **kwargs):
-#         if request.user.email_is_verified != True:
-#             current_site = get_current_site(request)
-#             user = request.user
-#             email = request.user.email
-#             subject = "Verify Email"
-#             message = render_to_string('roles_management/password_reset_email.html', {
-#                 'request': request,
-#                 'user': user,
-#                 'domain': current_site.domain,
-#                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-#                 'token':account_activation_token.make_token(user),
-#             })
-#             email = EmailMessage(
-#                 subject, message, to=[email]
-#             )
-#             email.content_subtype = 'html'
-#             email.send()
-#             return redirect('verify-email-done')
-#         else:
-#             return redirect('signup')
-#         return render(request, 'user/verify_email.html')
-
-
+class ResetPasswordChange(View):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if user.check_password(request.POST.get("current_password")):
+            if user.check_password(request.POST.get("new_password")):
+                context = {
+                "validlink": True,
+                "reset_password_form": ResetPasswordForm(),
+                "same_password": "The new password cannot be the same as the current password"
+                }
+                return render(request, "roles_management/reset_password_change.html", context)
+            else:
+                user.set_password(request.POST.get("new_password"))
+                user.save()
+                logout(request)
+                context = {
+                "success_change_password": "Password changed successfully"
+                }
+                return redirect(reverse("roles_management:reset-password-complete"))
+        else:
+            context = {
+            "validlink": True,
+            "reset_password_form": ResetPasswordForm(),
+            "fail_change_password": "Invalid Password"
+            }
+            return render(request, "roles_management/reset_password_change.html", context)
         
+
+class ResetPasswordComplete(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'roles_management/reset_password_complete.html')
+       
 
 class VerifyEmail(View):
     def get(self, request, *args, **kwargs):
@@ -259,7 +267,6 @@ class VerifyEmailConfirm(View):
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
         if user is not None and account_activation_token.check_token(user, token):
-            # profile = user.profile_set.first()
             user.is_active = True
             user.save()
             messages.success(request, 'Your email has been verified.')
@@ -272,58 +279,3 @@ class VerifyEmailConfirm(View):
 class VerifyEmailComplete(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'roles_management/verify_email_complete.html')
-    
-
-
-
-
-class SendMail(View):
-    context = {}
-    def get(self, request, *args, **kwargs):
-        return render(request, "index.html", self.context)
-    
-    def post(self, request, *args, **kwargs):
-        address = request.POST.get('address')
-        subject = request.POST.get('subject')
-        message = request.POST.get('message')
-
-        html_content = "<p>This is an <strong>important</strong><a href='http://127.0.0.1:8000/login'> login <a> message.</p>"
-
-        if address and subject and message:
-            try:
-                msg = EmailMultiAlternatives(subject, message, settings.EMAIL_HOST_USER, [address])
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
-                self.context['result'] = 'Email sent successfully'
-            except Exception as e:
-                self.context['result'] = f'Error sending email: {e}'
-        else:
-            self.context['result'] = 'All fields are required'
-
-        return render(request, "index.html", self.context)
-    
-
-class ResetPasswordLink(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "roles_management/reset_password_confirm.html")
-    
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        if not user.check_password(request.POST.get("password")):
-            if request.POST.get("password") == request.POST.get("confirm_password"):
-                user.set_password(request.POST.get("password"))
-                user.save()
-                context = {
-                "success_change_password": "Password changed successfully"
-                }
-                return render(request, "roles_management/reset_password_confirm.html", context)
-            else:
-                context = {
-                "match_password": "The confirm passwor did not match the password"
-                }
-                return render(request, "roles_management/reset_password_confirm.html", context)
-        else:
-            context = {
-            "same_password": "The new password cannot be the same as the current password"
-            }
-            return render(request, "roles_management/reset_password_confirm.html", context)
